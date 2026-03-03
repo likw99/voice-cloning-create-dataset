@@ -3,7 +3,7 @@
 
 build:
   # set to true if your model requires a GPU
-  gpu: true
+  gpu: false
 
   # a list of ubuntu apt packages to install
   system_packages:
@@ -66,8 +66,7 @@ build:
     - "colorama>=0.4.5"
     - "pyworld==0.3.2"
     - "httpx==0.25.1"
-    - "onnxruntime; sys_platform == 'darwin'"
-    - "onnxruntime-gpu; sys_platform != 'darwin'"
+    - "onnxruntime"
     - "torchcrepe==0.0.20"
     - "fastapi==0.88"
     - "ffmpy==0.3.1"
