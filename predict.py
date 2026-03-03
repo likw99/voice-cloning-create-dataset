@@ -11,6 +11,7 @@ import yt_dlp
 import os
 import shutil
 import subprocess
+import sys
 import numpy as np
 import librosa
 import soundfile
@@ -251,9 +252,9 @@ class Predictor(BasePredictor):
 
         # Separate Vocal and Instrument/Noise using Demucs
         AUDIO_INPUT = f"youtubeaudio/{AUDIO_NAME}.wav"
-        command = f"demucs --two-stems=vocals {AUDIO_INPUT}"
-        print(f"Running: {command}")
-        process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+        command = [sys.executable, "-m", "demucs", "--two-stems=vocals", AUDIO_INPUT]
+        print(f"Running: {' '.join(command)}")
+        process = subprocess.Popen(command, stdout=subprocess.PIPE)
         output, _ = process.communicate()
         print(output.decode())
 
