@@ -254,14 +254,27 @@ class Predictor(BasePredictor):
         AUDIO_INPUT = f"youtubeaudio/{AUDIO_NAME}.wav"
         command = [sys.executable, "-m", "demucs", "--two-stems=vocals", AUDIO_INPUT]
         print(f"Running: {' '.join(command)}")
-        process = subprocess.Popen(command, stdout=subprocess.PIPE)
-        output, _ = process.communicate()
-        print(output.decode())
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        if stdout:
+            print(stdout.decode())
+        if stderr:
+            print(stderr.decode())
+        if process.returncode != 0:
+            raise RuntimeError(
+                f"Demucs failed with exit code {process.returncode}.\n"
+                f"stderr: {stderr.decode() if stderr else '(none)'}\n"
+                f"stdout: {stdout.decode() if stdout else '(none)'}"
+            )
 
         os.makedirs(f"dataset/{AUDIO_NAME}", exist_ok=True)
 
-        # if not os.path.exists(f"separated/htdemucs/{AUDIO_NAME}/vocals.wav"):
-        #     raise Exception("File not found")
+        vocals_path = f"separated/htdemucs/{AUDIO_NAME}/vocals.wav"
+        if not os.path.exists(vocals_path):
+            raise FileNotFoundError(
+                f"Demucs did not produce expected output at '{vocals_path}'. "
+                f"Check demucs logs above for errors."
+            )
 
         audio, sr = librosa.load(
             f"separated/htdemucs/{AUDIO_NAME}/vocals.wav", sr=None, mono=False
