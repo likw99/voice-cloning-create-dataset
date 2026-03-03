@@ -17,18 +17,18 @@ jobs:
 
       - name: Setup Cog
         uses: replicate/setup-cog@v2
+        with:
+          token: ${{ secrets.REPLICATE_CLI_AUTH_TOKEN }}
 
       - name: Validate Secret
         env:
-          REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
+          REPLICATE_CLI_AUTH_TOKEN: ${{ secrets.REPLICATE_CLI_AUTH_TOKEN }}
         run: |
-          if [ -z "${REPLICATE_API_TOKEN:-}" ]; then
-            echo "Missing REPLICATE_API_TOKEN repository secret"
+          if [ -z "${REPLICATE_CLI_AUTH_TOKEN:-}" ]; then
+            echo "Missing REPLICATE_CLI_AUTH_TOKEN repository secret"
             exit 1
           fi
 
       - name: Push Model
-        env:
-          REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
         run: |
           cog push r8.im/likw99/voice-cloning-create-dataset-public
