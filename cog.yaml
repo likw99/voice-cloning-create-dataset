@@ -75,10 +75,8 @@ build:
 
   # commands run after the environment is setup
   run:
-    - pip install --upgrade pip
     - apt-get update && apt-get install -y ffmpeg
     - pip install imageio[ffmpeg]
-    - pip install demucs
 
 # predict.py defines how predictions are run on your model
 predict: "predict.py:Predictor"
